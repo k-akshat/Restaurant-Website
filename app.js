@@ -1,16 +1,15 @@
-//importing modules
+//importing modules -----------------------------------
 
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const _ = require("lodash");
 const Restaurant = require("./models/restaurant");
 const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const passportLocalMongoose = require('passport-local-mongoose');
 
-//intialising modules
+//intialising modules ---------------------------------
 
 const app = express();
 const dbURL = "mongodb+srv://akshatk123:fuckshat@restaurantdb.a8giyp2.mongodb.net/?retryWrites=true&w=majority";
@@ -38,11 +37,9 @@ mongoose.connect(dbURL)
 passport.use(new LocalStrategy(Restaurant.User.authenticate()));
 passport.serializeUser(Restaurant.User.serializeUser());
 passport.deserializeUser(Restaurant.User.deserializeUser());
-
-
-//GET requests
-
 let isAuthenticated = false;
+
+//GET requests ------------------------------------------
 
 app.get("/", (req, res) => {
   Restaurant.MenuItem.find()
@@ -56,7 +53,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/confirm", (req, res) => {
-  res.render("orderConfirm", {isAuthenticated});
+  if(req.isAuthenticated()){
+    res.render("orderConfirm", {isAuthenticated});
+  } else {
+    res.redirect('/login');
+  }
 });
 
 app.get("/menu", (req, res) => {
@@ -72,7 +73,7 @@ app.get("/menu", (req, res) => {
 
 app.get("/order", (req, res) => {
   if(req.isAuthenticated()){
-    Restaurant.CartItem.find()
+    Restaurant.CartItem.find({user_id: req.user._id})
     .then((result) => {
       let sum = 0;
       for (var i = 0; i < result.length; i++) {
@@ -94,12 +95,19 @@ app.get("/order", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.render("login",{isAuthenticated});
+  if(req.isAuthenticated()){
+    res.redirect('/profile');
+  } else {
+    res.render("login",{isAuthenticated});
+  }
 });
 
 app.get("/signup", (req, res) => {
-  res.render("signup",{isAuthenticated});
-});
+  if(req.isAuthenticated()){
+    res.redirect('/profile');
+  } else {
+    res.render("signup",{isAuthenticated});
+  }});
 
 app.get("/profile", (req, res) => {
   if(req.isAuthenticated()){
@@ -108,12 +116,6 @@ app.get("/profile", (req, res) => {
     const phone = req.user.phone;
     Restaurant.Order.find({user_id: req.user._id})
       .then((result)=>{
-        if(result === null){
-          console.log('null');
-        }
-        else{
-          console.log(result);
-        }
         res.render("userProfile",{
           isAuthenticated,
           name,
@@ -130,7 +132,6 @@ app.get("/profile", (req, res) => {
 
 app.get("/search/:id", (req, res) => {
   const id = req.params.id;
-  console.log(id);
   Restaurant.MenuItem.findById(id)
     .then((result) => {
       res.render("search", {
@@ -141,7 +142,7 @@ app.get("/search/:id", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-//POST requests
+//POST requests ----------------------------------------
 
 app.post("/search", (req, res) => {
   let searched = req.body.food;
@@ -162,74 +163,69 @@ app.post("/search", (req, res) => {
 });
 
 app.post("/order/:id", (req, res) => {
-  const id = req.params.id;
+  if(req.isAuthenticated()){
+    const id = req.params.id;
 
-  Restaurant.MenuItem.findById(id)
-    .then((result) => {
-      Restaurant.CartItem.updateOne(
-        { name: result.name },
-        {
-          $inc: { quantity: 1 },
-          $setOnInsert: {
-            name: result.name,
-            imageLink: result.imageLink,
-            price: result.price,
+    Restaurant.MenuItem.findById(id)
+      .then((result) => {
+        Restaurant.CartItem.updateOne(
+          { name: result.name, user_id: req.user._id },
+          {
+            $inc: { quantity: 1 },
+            $setOnInsert: {
+              user_id: req.user._id,
+              name: result.name,
+              imageLink: result.imageLink,
+              price: result.price,
+            },
           },
-        },
-        { upsert: true }
-      )
-        .then((result) => {
-          if (result.upsertedCount > 0) {
-            console.log("Document created.");
-          } else {
-            console.log("Document updated.");
-          }
-          res.json({ msg: "succefully added" });
-        })
-        .catch((err) => {
-          console.log("Error updating or creating document:", err);
-        });
-    })
-    .catch((err) => console.log(err));
+          { upsert: true }
+        )
+          .then((result) => {
+            if (result.upsertedCount > 0) {
+              console.log("Document created.");
+            } else {
+              console.log("Document updated.");
+            }
+            res.json({ msg: "succefully added" });
+          })
+          .catch((err) => {
+            console.log("Error updating or creating document:", err);
+          });
+      })
+      .catch((err) => console.log(err));
+  } else {
+    res.json(null);
+  }
 });
 
 app.post("/order", (req, res) => {
-  const id = req.body.id;
-  const value = req.body.value;
-  console.log(id, value);
-  Restaurant.CartItem.updateOne(
-    { _id: id },
-    {
-      $set: {
-        quantity: value,
-      },
-    }
-  )
-    .then((result) => {
-      if (result.upsertedCount > 0) {
-        console.log("Document created.");
-      } else {
-        console.log("Document updated.");
+  if(req.isAuthenticated()){
+    const id = req.body.id;
+    const value = req.body.value;
+    Restaurant.CartItem.updateOne(
+      { _id: id },
+      {
+        $set: {
+          quantity: value,
+        },
       }
-      res.json({ msg: "succefully added" });
-    })
-    .catch((err) => {
-      console.log("Error updating or creating document:", err);
-    });
+    )
+      .then((result) => {
+        if (result.upsertedCount > 0) {
+          console.log("Document created.");
+        } else {
+          console.log("Document updated.");
+        }
+        res.json({ msg: "succefully added" });
+      })
+      .catch((err) => {
+        console.log("Error updating or creating document:", err);
+      });
+  } else {
+    res.redirect('/login');
+  }
 });
-
-// DELETE requests
-
-app.delete("/order/:id", (req, res) => {
-  const id = req.params.id;
-  Restaurant.CartItem.findByIdAndDelete(id)
-    .then((result) => {
-      console.log(result);
-      res.json({ msg: "succefully deleted" });
-    })
-    .catch((err) => console.log(err));
-});
-
 
 app.post('/order-confirm', (req, res)=>{
   if(req.isAuthenticated()){
@@ -301,3 +297,15 @@ app.use((req, res)=>{
     isAuthenticated,
   })
 })
+
+// DELETE requests ----------------------------------
+
+app.delete("/order/:id", (req, res) => {
+  const id = req.params.id;
+  Restaurant.CartItem.findByIdAndDelete(id)
+    .then((result) => {
+      console.log(result);
+      res.json({ msg: "succefully deleted" });
+    })
+    .catch((err) => console.log(err));
+});

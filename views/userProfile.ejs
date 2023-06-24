@@ -18,25 +18,32 @@
   <div class="orders-box">
     <h3 class="heading">Orders</h3>
     <div class="ordered-items">
-      <% for(let i = 0 ; i < result.length ; i++){ %>
-      <div class="order">
-        <div class="date">
-          <% const dateOfCreation = new Date(result[i].createdAt).toISOString().split('T')[0]; %>
-          <p><%= dateOfCreation %></p>
+      <% if(result.length === 0){ %>
+        <div class="not-found-box">
+          <h3 class="msg">Why wait? Place your first order and savor the anticipation!</h3>
+          <a href="/menu" class="btn menu-btn">explore menu ...</a>
         </div>
-        <div class="items">
-          <% for(let j = 0 ; j < result[i].name.length ; j++){ %>
-          <p><%= result[i].quantity[j] %> X <%= result[i].name[j] %></p>
+      <% } else { %>
+        <% for(let i = 0 ; i < result.length ; i++){ %>
+          <div class="order">
+            <div class="date">
+              <% const dateOfCreation = new Date(result[i].createdAt).toISOString().split('T')[0]; %>
+              <p><%= dateOfCreation %></p>
+            </div>
+            <div class="items">
+              <% for(let j = 0 ; j < result[i].name.length ; j++){ %>
+              <p><%= result[i].quantity[j] %> X <%= result[i].name[j] %></p>
+              <% } %>
+            </div>
+            <div class="amount">
+              <p>₹ <%= result[i].totalPrice %></p>
+            </div>
+          </div>
+          <% if(i !== result.length - 1){ %>
+            <div class="line"></div>
           <% } %>
-        </div>
-        <div class="amount">
-          <p>₹ <%= result[i].totalPrice %></p>
-        </div>
-      </div>
-      <% if(i !== result.length - 1){ %>
-        <div class="line"></div>
-      <% } %>
-      <% } %>
+        <% } %>
+      }
     </div>
   </div>
 </div>

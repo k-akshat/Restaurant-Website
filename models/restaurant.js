@@ -57,6 +57,10 @@ const menuItemSchema = new Schema({
 const MenuItem = mongoose.model('MenuItem', menuItemSchema);
 
 const cartItemSchema = new Schema({
+    user_id: {
+        type: String,
+        required: true,
+    },
     name: {
         type: String,
         required: true,

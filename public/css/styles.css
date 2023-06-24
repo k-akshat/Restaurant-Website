@@ -907,13 +907,13 @@ section:nth-child(even){
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin: 1xrem 0;
+    margin: 1rem 0;
 
 }
 
 .log-in form .input-box .input{
     width: 90%;
-    margin: 2rem 0;
+    margin: 1rem 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1054,6 +1054,7 @@ section:nth-child(even){
 }
 .not-found-box .msg{
     font-size: 5rem;
+    text-align: center;
 }
 
 .confirm-box{
@@ -1072,6 +1073,7 @@ section:nth-child(even){
 }
 .confirm-box  h3{
     font-size: 5rem;
+    text-align: center;
 }
 
 .profile{
@@ -1238,6 +1240,22 @@ section:nth-child(even){
     }
     .order .order-items .box a{
         font-size: 1rem !important;
+    }
+    .profile{
+        display: block;
+        width: 100%;
+    }
+    .profile .user{
+        width: 60%;
+        margin: 2rem auto;
+    }
+    .profile .orders-box{
+        width: 90%;
+        margin: 2rem auto;
+    }
+    .search-result .box{
+        width: 90%;
+        margin: 10rem auto 2rem auto;
     }
 }
 

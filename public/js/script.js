@@ -29,7 +29,6 @@ const addCartButton = document.querySelectorAll('a.cart');
 addCartButton.forEach((button)=>{
   button.addEventListener('click', (event)=>{
     event.preventDefault();
-    console.log(button.dataset.doc);
     const endPoint = `/order/${button.dataset.doc}`;
 
     fetch(endPoint, {
@@ -37,8 +36,11 @@ addCartButton.forEach((button)=>{
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
-      window.location.href = '/order';
+      if(data == null){
+        window.location.href = '/login';
+      } else {
+        window.location.href = '/order';
+      }
     })
     .catch(err => console.log(err));
   })
@@ -49,7 +51,6 @@ const rmCartButton = document.querySelectorAll('a.remove-cart');
 rmCartButton.forEach((button)=>{
   button.addEventListener('click', (event)=>{
     event.preventDefault();
-    console.log(button.dataset.doc);
     const endPoint = `/order/${button.dataset.doc}`;
 
 
@@ -58,7 +59,6 @@ rmCartButton.forEach((button)=>{
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
       window.location.href = '/order';
     })
     .catch(err => console.log(err));
@@ -69,11 +69,8 @@ const qtyButton = document.querySelectorAll('input.qty');
 qtyButton.forEach((button)=>{
   button.addEventListener('change', (event)=>{
 
-    console.log(button.dataset.doc);
-
     const id = button.dataset.doc;
     const value = button.value;
-    console.log(id, value);
     const data = {
       id, value
     }
@@ -86,7 +83,6 @@ qtyButton.forEach((button)=>{
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
       window.location.href = '/order';
     })
     .catch(err => console.log(err));
