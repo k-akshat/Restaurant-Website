@@ -1,43 +1,146 @@
 <%- include("header"); %>
 
-
 <!-- order section starts -->
 
 <section class="order" id="order">
+  <h3 class="sub-heading">order now</h3>
+  <h1 class="heading">Order Your Food in a Snap!</h1>
 
-    <h3 class="sub-heading">order now</h3>
-    <h1 class="heading">Order Your Food in a Snap!</h1>
-
-    <form action="">
-        <div class="input-box">
-            <div class="input">
-                <span>your name</span>
-                <input type="text" placeholder="enter your name">
-            </div>
-            <div class="input">
-                <span>your number</span>
-                <input type="text" placeholder="enter your number">
-            </div>
+  <div class="cart-items">
+    <% if(cartItems.length === 0){ %>
+    <div class="empty">
+      <div class="empty-cart-msg">
+        <h1 class="msg">
+          Oh no! Your cart is on a hunger strike. Help us feed it with delicious
+          treats.
+        </h1>
+      </div>
+      <div class="menu-pg">
+        <a href="/menu" class="btn">Go to menu page</a>
+      </div>
+    </div>
+    <% } else{ %>
+    <div class="order-items">
+      <% for(var i = 1 ; i <= cartItems.length ; i++){ %>
+      <div class="box">
+        <div class="image">
+          <img src="<%= cartItems[i-1].imageLink %>" alt="" />
         </div>
-        <div class="input-box">
-            <div class="input">
-                <span>your address</span>
-                <textarea name="" placeholder="enter your address" id="" cols="30" rows="10"></textarea>
-            </div>
-            <div class="input">
-                <span>your message</span>
-                <textarea name="" placeholder="enter your message" id="" cols="30" rows="10"></textarea>
-            </div>
+        <div class="content">
+          <h3><%= cartItems[i-1].name %></h3>
         </div>
-        
-        <input type="submit" value="order now" class="btn">
-        
-    </form>
 
+        <div class="quantity">
+          <label for="quantity<%= i %>">Quantity:</label>
+          <input
+            type="number"
+            id="quantity<%= i %>"
+            name="quantity<%= i %>"
+            min="1"
+            class="qty"
+            data-doc = "<%= cartItems[i-1]._id %>"
+            value="<%= cartItems[i-1].quantity %>"
+          />
+        </div>
+
+        <div class="price">
+          <span class="price">₹<%= cartItems[i-1].price %></span>
+        </div>
+        <div class="rm-btn">
+          <a class="remove-cart" data-doc="<%= cartItems[i-1]._id %>"
+            >Remove from cart</a
+          >
+        </div>
+      </div>
+      <% } %>
+    </div>
+    <div class="price-box">
+      <h1 class="sub-heading">Cart total</h1>
+      <div class="box">
+        <div class="items-value">
+          <% for(var i = 1 ; i <= cartItems.length ; i++){ %>
+          <div class="items">
+            <div class="content">
+              <p><%= cartItems[i-1].name %></p>
+            </div>
+            <div class="price">
+              <span class="price">₹<%= cartItems[i-1].quantity * cartItems[i-1].price %></span>
+            </div>
+          </div>
+          <% } %>
+        </div>
+        <div class="line"></div>
+        <div class="shipping">
+          <div class="content">
+            <p>Shipping charge</p>
+          </div>
+          <div class="price">
+            <span>Free Shipping</span>
+          </div>
+        </div>
+        <div class="gst">
+          <div class="content">
+            <p>GST</p>
+          </div>
+          <div class="price">
+            <span>18%</span>
+          </div>
+        </div>
+        <div class="line"></div>
+        <div class="total-value">
+          <div class="content">
+            <p>Total cart value</p>
+          </div>
+          <div class="price">
+            <span>₹<%= totalVal %></span>
+          </div>
+        </div>
+      </div>
+      <div class="order-btn">
+        <a href="#order-form" class="btn">Proceed to Checkout</a>
+      </div>
+    </div>
+    <% } %>
+  </div>
+
+  <form action="/order-confirm" method="POST" id="order-form">
+    <div class="input-box">
+      <div class="input">
+        <span>your name</span>
+        <input type="text" placeholder="enter your name" />
+      </div>
+      <div class="input">
+        <span>your number</span>
+        <input type="text" placeholder="enter your number" />
+      </div>
+    </div>
+    <div class="input-box">
+      <div class="input">
+        <span>your address</span>
+        <textarea
+          name=""
+          placeholder="enter your address"
+          id=""
+          cols="30"
+          rows="10"
+        ></textarea>
+      </div>
+      <div class="input">
+        <span>your message</span>
+        <textarea
+          name=""
+          placeholder="enter your message"
+          id=""
+          cols="30"
+          rows="10"
+        ></textarea>
+      </div>
+    </div>
+
+    <input type="submit" value="order now" class="btn" />
+  </form>
 </section>
 
 <!-- order section ends -->
-
-
 
 <%- include("footer"); %>

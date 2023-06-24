@@ -1,6 +1,44 @@
 <%- include("header"); %>
 
+<div class="profile">
+  <div class="user">
+    <div class="image">
+      <i class="fa-solid fa-user"></i>
+    </div>
+    <div class="content">
+      <h3 class="name"><%= name%></h3>
+      <h3 class="email"><%= username%></h3>
+      <h3 class="phone"><%= phone%></h3>
+    </div>
+    <form action="/logout" method="POST">
+      <input type="submit" value="Log Out" class="btn" />
+    </form>
+  </div>
 
-
+  <div class="orders-box">
+    <h3 class="heading">Orders</h3>
+    <div class="ordered-items">
+      <% for(let i = 0 ; i < result.length ; i++){ %>
+      <div class="order">
+        <div class="date">
+          <% const dateOfCreation = new Date(result[i].createdAt).toISOString().split('T')[0]; %>
+          <p><%= dateOfCreation %></p>
+        </div>
+        <div class="items">
+          <% for(let j = 0 ; j < result[i].name.length ; j++){ %>
+          <p><%= result[i].quantity[j] %> X <%= result[i].name[j] %></p>
+          <% } %>
+        </div>
+        <div class="amount">
+          <p>₹ <%= result[i].totalPrice %></p>
+        </div>
+      </div>
+      <% if(i !== result.length - 1){ %>
+        <div class="line"></div>
+      <% } %>
+      <% } %>
+    </div>
+  </div>
+</div>
 
 <%- include("footer"); %>

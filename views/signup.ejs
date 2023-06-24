@@ -3,32 +3,34 @@
 
 <section class="sign-up" id="sign-up">
 
-    <h3 class="sub-heading">Create an Account</h3>
-    <h1 class="heading">Create an Account</h1>
+    <div class="heading-container">
+        <h1 class="heading">Create an Account</h1>
+    </div>
 
-    <form action="">
+    <form action="/signup" method="POST">
         <div class="input-box">
             <div class="input">
-                <span>your name</span>
-                <input type="text" placeholder="enter your name">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" name="name" placeholder="Your Name">
             </div>
             <div class="input">
-                <span>your number</span>
-                <input type="text" placeholder="enter your number">
-            </div>
-        </div>
-        <div class="input-box">
-            <div class="input">
-                <span>Your address</span>
-                <textarea name="" placeholder="enter your address" id="" cols="30" rows="10"></textarea>
+                <i class="fa-solid fa-phone"></i>
+                <input type="tel" name="phone" placeholder="Your Phone Number">
             </div>
             <div class="input">
-                <span>your message</span>
-                <textarea name="" placeholder="enter your message" id="" cols="30" rows="10"></textarea>
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" name="username" placeholder="Your Email">
+            </div>
+            <div class="input">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" name="password" placeholder="Password">
             </div>
         </div>
         
-        <input type="submit" value="order now" class="btn">
+        <input type="submit" value="Sign up!" class="btn">
+        <div class="login">
+            <p>Already have an account? <a href="/login">Login Here</a> </p>
+        </div>
         
     </form>
 

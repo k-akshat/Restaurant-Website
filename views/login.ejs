@@ -1,6 +1,30 @@
 <%- include("header"); %>
 
+<section class="log-in" id="log-in">
 
+    <div class="heading-container">
+        <h1 class="heading">Log In to your Account</h1>
+    </div>
 
+    <form action="/login" method="post">
+        <div class="input-box">
+            <div class="input">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" name="username" placeholder="Your Email">
+            </div>
+            <div class="input">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" name="password" placeholder="Password">
+            </div>
+        </div>
+        
+        <input type="submit" value="Log in!" class="btn">
+        <div class="login">
+            <p>Don't have an account? <a href="/signup">Sign up Here</a> </p>
+        </div>
+        
+    </form>
+
+</section>
 
 <%- include("footer"); %>

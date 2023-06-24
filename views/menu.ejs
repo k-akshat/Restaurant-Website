@@ -1,40 +1,39 @@
 <%- include("header"); %>
 
-
 <!-- menu section starts -->
 
 <section class="menu" id="menu">
+  <h3 class="sub-heading">our menu</h3>
+  <h1 class="heading">best food around you</h1>
 
-    <h3 class="sub-heading">our menu</h3>
-    <h1 class="heading">best food around you</h1>
-
-    <div class="box-container">
-        <% for(var i = 1 ; i <= foods.length ; i++){ %>
-            <div class="box">
-                <div class="image">
-                    <img src="./images/menu-<%= i %>.jpg" alt="">
-                    <a href="#" class="fas fa-heart"></a>
-                </div>
-                <div class="content">
-                    <div class="stars">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star-half-alt"></i>
-                    </div>
-                    <h3><%= foods[i-1] %></h3>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae, rerum?</p>
-                    <a href="/order" class="btn">add to cart</a>
-                    <span class="price">₹<%= price[i-1] %></span>
-                </div>
-            </div>
-        <% } %>
+  <div class="box-container">
+    <% for(var i = 0 ; i < items.length ; i++){ %>
+    <div class="box">
+      <div class="image">
+        <img src="<%= items[i].imageLink %>" alt="" />
+        <a href="#" class="fas fa-heart"></a>
+      </div>
+      <div class="content">
+        <div class="stars">
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star-half-alt"></i>
+        </div>
+        <h3><%= items[i].name %></h3>
+        <p>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae,
+          rerum?
+        </p>
+        <a class="cart btn" data-doc="<%= items[i]._id %>">add to cart</a>
+        <span class="price">₹<%= items[i].price %></span>
+      </div>
     </div>
-
+    <% } %>
+  </div>
 </section>
 
 <!-- menu section ends -->
-
 
 <%- include("footer"); %>
